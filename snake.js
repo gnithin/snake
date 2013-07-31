@@ -1,5 +1,5 @@
 window.onload=init;
-var timer_=100;	//the speed of the snake
+var timer_=75;	//the speed of the snake
 //var timer_inc=100;	//this is for the increment of timer
 var loopTimer;
 var gap=10,width_=20,height_=20;		//keep height_ and width_ of the nodes the same
