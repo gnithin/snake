@@ -1,14 +1,4 @@
-The old-school Snake game in JavaScript using JQuery library.
-Demo:
-http://fiddle.jshell.net/me_orionhunter/stvvj/2/show/light/
-
-/*----------
-CODE DETAILS
-----------*/
-/*-----
 CLASSES
------*/
-
 node{
     /*     data  members.    */
     int xpos;
@@ -26,10 +16,10 @@ node{
    draw_me(col)
    /*
         It draws a node on the canvas.
-        Shape:       Considered to be rectangle by default.
+        Shape:     Considered to be rectangle by default.
         Color:       As specified in the argument - col.
-        Position:    As specified by the xpos and ypos variables.
-        Size:        As specified by the global variables width_ and height_.
+        Position:   As specified by the xpos and ypos variables.
+        Size:         As specified by the global variables width_ and height_.
    */
 }
 snake{
@@ -77,75 +67,73 @@ snake{
            The xpos and ypos of this node will be the xpos and ypos of the tail node.
    */
 }
-/*--------------
+
 GLOBAL VARIABLES
---------------*/
+timer_                                              //This is for determining the timeout interval. This variable decides the speed of the snake.
+loopTimer                                        //Numerical ID of timeout.
+gap,width_,height_                          //This determines the height and width of the nodes.
+C_WIDTH,C_HEIGHT                     //This represents the canvas width and height.
+XINC_CONST,YINC_CONST         //This represents the fixed increment values of xinc and yinc.
+flag                                                  //This represents
+lose                                                 //This is set to true when any lose condition is encountered.
+auto                                                //This flag is for enabling and disabling file.   
+balls_col                                         //Ball color.
+//This is the user_control keycodes.
+user1
+user2
 
-timer_                             	//This is for determining the timeout interval. This variable decides the speed of the snake.
-loopTimer                               //Numerical ID of timeout.
-gap,width_,height_                      //This determines the height and width of the nodes.
-C_WIDTH,C_HEIGHT                        //This represents the canvas width and height.
-XINC_CONST,YINC_CONST         		//This represents the fixed increment values of xinc and yinc.
-flag                                    //This represents the play(false)/pause(true) state.
-lose                                    //This is set to true when any lose condition is encountered.
-auto                                    //This flag is for enabling and disabling file.   
-balls_col                               //Ball color.
-user1,user2				//This is the user_control keycodes.
-
-/*-------
 FUNCTIONS
--------*/
 
 init()
-/*----
+/*---------------------    If flag is true, then it means that the game is paused.----------------------------------
         This is the function that is called when the window has finished loading.
         This function is used for initialising all the parameters and configuring all the initial conditions.
         TASKS-
         1.    Set the size of the canvas element according to the size of the browser window.
-              This is troublesome in the sense that we have to consider the space which is inside the browser window for the present document.
-              window.innerWidth finds out the space thats available for setting the size of the canvas element.
-              When user toggles to FullScreen mode after the page has loaded, there is a lot of space left, but when the user refreshes in FullScreen mode, the canvas occupies the whole screen.
+                This is troublesome in the sense that we have to consider the space which is inside the browser window for the present document.
+                window.innerWidth finds out the space thats available for setting the size of the canvas element.
+                When user toggles to FullScreen mode after the page has loaded, there is a lot of space left, but when the user refreshes in FullScreen mode, the canvas occupies the whole screen.
         2.    Show initial message, which contains some basic control information and other details.
         3.    Add event listeners to elements (like the canvas itself) and define their functions.
-              OnClick event on canvas element must toggle between playing and pausing the game.
-              If the game is in play mode, the flag global variable is true, else its false.
-              When in pause mode. unbind all the key controls and when its toggled to play mode, bind the key controls again.
+               OnClick event on canvas element must toggle between playing and pausing the game.
+               If the game is in play mode, the flag global variable is true, else its false.
+               When in pause mode. unbind all the key controls and when its toggled to play mode, bind the key controls again.
         4.    Instantiate the snake class, create 2 instances.
-              Populate the node_list of both the snakes, and draw them.
+               Populate the node_list of both the snakes, and draw them.
         5.    Instantiate a new node object, which represents a ball entity.
-              Obtain the xpos and ypos for the ball using gen_new_balls() function.
-              Draw the balls.
+               Obtain the xpos and ypos for the ball using gen_new_balls() function.
+               Draw the balls.
         6.    Call auto_mode() function to initialse auto-mode configurations.
         7.    Call animate_
         8.    Call user_controls for configuring the user-controls, based on the global variable auto.
 */
 
 gen_new_balls(balls, all_snakes)
-/*------------------------------
+/*-------------------------------------------------------
         This function is used to generate the positions of the new balls.
         TASKS
         1.    Randomly generate the positions of balls.
         2.    Check against all the positions of the nodes in the node_list. Do this for all the snakes.
 */
 auto_mode(all_snakes, balls)
-/*--------------------------
+/*-------------------------------------------------------
     This function is used for configuring the auto-mode in the game.
     When the global variable auto is set to true, the auto-mode is enabled.
     By enabling the auto-mode, the player 2 snake will start searching for the balls on its own.
     
 */
 animate_(all_snakes, balls)
-/*-------------------------
+/*-------------------------------------------------------
         This function is responsible for checking the current state of the snake and starting the next state of the snake.
         TASKS
         1.    Check if auto flag is set.
-              If set, then we need to manually determine the next position of the second snake.
-              This is done by the get_directions() function.
+                If set, then we need to manually determine the next position of the second snake.
+                This is done by the get_directions() function.
         2.    Move nodes of all the snakes.
         3.    Check for lose conditions.
-              There can be 2 possible lose conditions-
-               -If collision occurs between the 2 snakes.    (inter-snake collision)
-               -If a snake collides with itself.                       (intra-snake collision)
+                There can be 2 possible lose conditions-
+                -If collision occurs between the 2 snakes.    (inter-snake collision)
+                -If a snake collides with itself.                       (intra-snake collision)
         4.     If a lose conditions are encountered, then lose_message() is called immediately.
         5.     If a lose condition is not encountered, then a set of task are to be performed-
                 -Check if the ball has been eaten by either of the snakes. If eaten, then call gen_new_balls() to obtain the new positions for the ball and increment the snake that has eaten the ball.
@@ -154,27 +142,28 @@ animate_(all_snakes, balls)
                 -Start the timer to call animate_() function again.
 */
 user_controls(all_snakes, index, user_con, balls)
-/*-----------------------------------------------
+/*-------------------------------------------------------
         This is a dedicated funtion for configuring the user_controls of the snake, for both the players.
         For a particular snake index, it configures the event - "keydown" for all the values in global array user_con.
 */
 get_directions(all_snakes , balls)
-/*--------------------------------
+/*-------------------------------------------------------
         This function is responsible for determining the next position for snake 2 when in auto mode (that is, global variable auto is true).
         This function computes the next position and updates the xinc and yinc of snake 2.
         For computing the next position of snake 2, the following factors need to be taken into consideration-
         1.    The distance between the snake and the ball.
-              We have to find out the path that is closest to the ball, so that the snake can reach it sooner.
+               We have to find out the path that is closest to the ball, so that the snake can reach it sooner.
         2.    Intra-snake collision aversion.
-              We need to determine if the determined xinc and yinc cause the snake to collide with itself.
-              If it does, then we need to change the values of xinc and yinc, such that it is avoided.
+               We need to determine if the determined xinc and yinc cause the snake to collide with itself.
+               If it does, then we need to change the values of xinc and yinc, such that it is avoided.
         Both these factors are implemented, but are not foolproof. There are a few bugs here and there.
         As the size of the canvas increases, the chances of the intra-snake collision is less. But it becomes more cumbersome to make the snake move  on the shortest path.
         Alternatively, as the canvas size decreases, the chances of intra-snake collision increases, but the shortest path becomes trivial, since it does not have to move much.
     Inter-snake collision could also be taken into consideration, but they are not implemented.
 */
 lose_message(snake_number)
-/*------------------------
+/*-------------------------------------------------------
     This function is called when the lose condition is encountered.
     It clears the timer and displays the result, which is the scores of both the players and the final result.
 */
+
